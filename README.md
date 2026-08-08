@@ -1,44 +1,32 @@
-# RL for Market Making
+# Reinforcement Learning for Market Making
 
 ## Overview
-This project studies market making as a reinforcement learning problem and investigates whether RL agents can outperform the classical Avellaneda–Stoikov benchmark.
+This project studies market making as a reinforcement learning problem and investigates whether RL agents can outperform the classical Avellaneda-Stoikov analytical benchmark. 
 
-We implement continuous-control algorithms (PPO and SAC) to learn optimal bid-ask quoting strategies under multiple simulated market environments.
+By implementing continuous-control algorithms—specifically Proximal Policy Optimization (PPO) and Soft Actor-Critic (SAC)—this repository explores how agents learn optimal bid-ask quoting strategies to manage stochastic inventory risk across multiple simulated market environments.
 
 ## Key Features
-- Continuous action space for bid-ask spread control
-- PPO and SAC as primary methods
-- Benchmark comparison with Avellaneda–Stoikov model
-- Multiple environments:
-  - Brownian motion (baseline)
-  - Jump-diffusion (stress testing)
-  - Toxic order flow scenarios
+* **Continuous Action Space:** Dynamic control for optimal bid-ask spread placement.
+* **Algorithm Implementation:** Custom environments trained using PPO and SAC.
+* **Baseline Benchmarking:** Direct comparative analysis against the Avellaneda-Stoikov model.
+* **Volatility Testing Environments:**
+  * Brownian motion (Standard baseline)
+  * Jump-diffusion (Stress testing)
+  * Toxic order flow scenarios (Adverse selection)
 
-## Results
-- PPO and SAC demonstrate adaptive quoting behavior
-- RL agents outperform the Avellaneda–Stoikov benchmark in simulated environments
-- SAC shows improved robustness under noisy and non-stationary conditions
+## Results & Findings
+* Both PPO and SAC demonstrate highly adaptive quoting behavior during volatile regimes.
+* The RL agents successfully outperform the rigid Avellaneda-Stoikov benchmark in simulated environments with non-linear order flow.
+* The SAC agent exhibits superior robustness and sample efficiency under noisy, non-stationary market conditions.
 
 ## Repository Structure
-rl-market-making/
-├── report/        # Final paper/report
-├── notebooks/     # PPO, SAC implementations
-├── src/           # Core environment and training code
-├── results/       # Plots and outputs
 
-## Installation
-pip install -r requirements.txt
-
-
-## Running the Code
-python train.py
-
-
-## Future Work
-- Incorporate real limit order book data
-- Risk-sensitive reward design (CVaR)
-- Offline RL and execution strategies
-
-
-## Report
-[Download Full Report](./report/rl_market_making.pdf)
+```text
+├── notebooks/
+│   ├── PPO.ipynb                 # PPO training and evaluation
+│   ├── SAC.ipynb                 # SAC implementation and inventory risk modeling
+│   └── Other_Comp_Algorithms.ipynb
+├── report/
+│   └── rl_market_making.pdf      # Comprehensive final research paper
+├── results/                      # Generated PnL plots and spread behavior metrics
+└── README.md
