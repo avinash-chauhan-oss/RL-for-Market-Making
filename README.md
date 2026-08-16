@@ -1,32 +1,94 @@
 # Reinforcement Learning for Market Making
 
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/Framework-PyTorch-EE4C2C.svg)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
+
+A comparative study of deep reinforcement learning agents (PPO and SAC) versus the classical Avellaneda-Stoikov analytical benchmark for automated market making in simulated Limit Order Book environments.
+
+---
+
 ## Overview
-This project studies market making as a reinforcement learning problem and investigates whether RL agents can outperform the classical Avellaneda-Stoikov analytical benchmark. 
 
-By implementing continuous-control algorithms—specifically Proximal Policy Optimization (PPO) and Soft Actor-Critic (SAC)—this repository explores how agents learn optimal bid-ask quoting strategies to manage stochastic inventory risk across multiple simulated market environments.
+Market making is the practice of simultaneously quoting bid and ask prices to provide liquidity while profiting from the spread. Classical approaches (Avellaneda-Stoikov, 2008) rely on analytical solutions that make strong assumptions about market structure. This project investigates whether **model-free deep RL agents** can learn superior quoting strategies by interacting directly with simulated market environments.
 
-## Key Features
-* **Continuous Action Space:** Dynamic control for optimal bid-ask spread placement.
-* **Algorithm Implementation:** Custom environments trained using PPO and SAC.
-* **Baseline Benchmarking:** Direct comparative analysis against the Avellaneda-Stoikov model.
-* **Volatility Testing Environments:**
-  * Brownian motion (Standard baseline)
-  * Jump-diffusion (Stress testing)
-  * Toxic order flow scenarios (Adverse selection)
+**Core question:** *Can PPO and SAC agents autonomously discover bid-ask quoting policies that outperform the AS analytical benchmark across varying market regimes?*
 
-## Results & Findings
-* Both PPO and SAC demonstrate highly adaptive quoting behavior during volatile regimes.
-* The RL agents successfully outperform the rigid Avellaneda-Stoikov benchmark in simulated environments with non-linear order flow.
-* The SAC agent exhibits superior robustness and sample efficiency under noisy, non-stationary market conditions.
+---
+
+## Methodology
+
+### Algorithms Implemented
+
+| Algorithm | Type | Key Characteristic |
+|-----------|------|--------------------|
+| **SAC** (Soft Actor-Critic) | Off-policy | Maximum entropy framework; robust to reward shaping |
+| **PPO** (Proximal Policy Optimization) | On-policy | Clipped objective; stable training dynamics |
+| **Avellaneda-Stoikov** | Analytical Benchmark | Closed-form solution under GBM assumption |
+
+### Market Environments
+
+Three simulated LOB environments of increasing complexity:
+
+1. **Brownian Motion** — Standard GBM mid-price dynamics (baseline)
+2. **Jump-Diffusion** — Poisson-distributed price jumps for stress testing
+3. **Toxic Order Flow** — Adverse selection pressure from informed traders
+
+### Reward Design
+
+The inventory-adjusted reward function penalizes holding risk:
+
+$$r_t = \Delta \text{PnL}_t - \phi \cdot q_t^2$$
+
+where $q_t$ is the inventory position and $\phi$ is the risk-aversion coefficient.
+
+---
+
+## Results
+
+| Environment | SAC PnL | PPO PnL | AS Benchmark |
+|-------------|---------|---------|--------------|
+| Brownian Motion | ✅ Outperforms | ≈ Matches | Baseline |
+| Jump-Diffusion | ✅ Outperforms | ⚠️ Mixed | Baseline |
+| Toxic Flow | ✅ Outperforms | ❌ Underperforms | Baseline |
+
+SAC's maximum entropy objective proved significantly more robust to non-stationary market regimes.
+
+---
+
+## Tech Stack
+
+| Component | Tool |
+|-----------|------|
+| RL Algorithms | PyTorch (custom implementations) |
+| Environment | Custom `gym`-compatible LOB simulator |
+| Numerical Computing | NumPy, SciPy |
+| Visualization | Matplotlib, Seaborn |
+
+---
 
 ## Repository Structure
 
-```text
-├── notebooks/
-│   ├── PPO.ipynb                 # PPO training and evaluation
-│   ├── SAC.ipynb                 # SAC implementation and inventory risk modeling
-│   └── Other_Comp_Algorithms.ipynb
-├── report/
-│   └── rl_market_making.pdf      # Comprehensive final research paper
-├── results/                      # Generated PnL plots and spread behavior metrics
+```
+RL-for-Market-Making/
+├── environments/       # Custom LOB gym environments
+├── agents/             # SAC and PPO implementations
+├── notebooks/          # Experiment notebooks and result analysis
+├── results/            # Saved model weights and performance logs
 └── README.md
+```
+
+---
+
+## Background
+
+This project builds upon:
+- Avellaneda, M., & Stoikov, S. (2008). *High-frequency trading in a limit order book.* Quantitative Finance, 8(3), 217–224.
+- Haarnoja et al. (2018). *Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor.*
+
+---
+
+## Author
+
+**Avinash Chauhan** — BS-MS Mathematics, IISER Thiruvananthapuram
